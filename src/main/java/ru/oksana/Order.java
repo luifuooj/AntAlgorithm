@@ -4,14 +4,16 @@ package ru.oksana;
  * Заказ
  */
 public class Order {
+
     /**
      * Вершина
      */
-    private Node node;
+    private final Node node;
+
     /**
      * Вес
      */
-    private Double weight;
+    private final Double weight;
 
     public Order(Node node, Double weight) {
         this.node = node;
@@ -20,10 +22,6 @@ public class Order {
 
     public Node getNode() {
         return node;
-    }
-
-    public Double getWeight() {
-        return weight;
     }
 
     @Override

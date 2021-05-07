@@ -4,41 +4,52 @@ package ru.oksana;
  * Поставщик.
  */
 public class Supplier {
+
     /**
      * Имя поставщика.
      */
     private String name;
+
     /**
      * Продукт.
      */
     private String product;
+
     /**
      * Количество товара у поставщика
      */
     private Double quantity;
 
+    /**
+     * Стартовое количество товара
+     */
     private Double startQuantity;
 
     /**
      * Цена за единицу товара
      */
     private Double unitPrice;
+
     /**
      * Вместительность машины
      */
     private Integer capacityOfCar;
+
     /**
      * Текущая загруженность машины
      */
     private Integer currentLoadOfCar = 0;
+
     /**
      * Вместительность поддона
      */
     private Integer capacityPallets;
+
     /**
      * Цена за машину
      */
     private Double carPrice;
+
     /**
      * Текущее количество машин
      */
@@ -59,14 +70,12 @@ public class Supplier {
     }
 
     /**
-     * Вычисление веса
+     * Вычисление веса.
      * @return вес
      */
     public Double getWeight() {
-        if (quantity < capacityPallets) {
-            return Double.MAX_VALUE;
-        }
         Double weight = .0;
+        // проверка на наличие места в машине или что нужна самая первая машина
         if (currentCarCount == 0 || capacityOfCar.equals(currentLoadOfCar)) {
             weight += carPrice;
             currentCarCount++;
@@ -78,82 +87,33 @@ public class Supplier {
         return weight;
     }
 
+    /**
+     * Процедура для сброса к начальному виду.
+     */
     public void restore() {
         this.quantity = this.startQuantity;
         this.currentCarCount = 0;
         this.currentLoadOfCar = 0;
     }
 
-    public String getName() {
-        return name;
+    /**
+     * Проверка на наличие товара у поставщика.
+     * @return true - если пустой
+     */
+    public Boolean isEmpty() {
+        return this.quantity < this.capacityPallets;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getName() {
+        return name;
     }
 
     public String getProduct() {
         return product;
     }
 
-    public void setProduct(String product) {
-        this.product = product;
-    }
-
-    public Double getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Double quantity) {
-        this.quantity = quantity;
-    }
-
-    public Double getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(Double unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
-    public Integer getCapacityOfCar() {
-        return capacityOfCar;
-    }
-
-    public void setCapacityOfCar(Integer capacityOfCar) {
-        this.capacityOfCar = capacityOfCar;
-    }
-
-    public Integer getCurrentLoadOfCar() {
-        return currentLoadOfCar;
-    }
-
-    public void setCurrentLoadOfCar(Integer currentLoadOfCar) {
-        this.currentLoadOfCar = currentLoadOfCar;
-    }
-
     public Integer getCapacityPallets() {
         return capacityPallets;
-    }
-
-    public void setCapacityPallets(Integer capacityPallets) {
-        this.capacityPallets = capacityPallets;
-    }
-
-    public Double getCarPrice() {
-        return carPrice;
-    }
-
-    public void setCarPrice(Double carPrice) {
-        this.carPrice = carPrice;
-    }
-
-    public Integer getCurrentCarCount() {
-        return currentCarCount;
-    }
-
-    public void setCurrentCarCount(Integer currentCarCount) {
-        this.currentCarCount = currentCarCount;
     }
 
     @Override

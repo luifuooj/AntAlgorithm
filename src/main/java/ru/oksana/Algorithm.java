@@ -1,7 +1,7 @@
 package ru.oksana;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 /**
  * Алгоритм
@@ -12,31 +12,56 @@ public class Algorithm {
      * Цель заказа
      */
     private final Double fullOrder;
+
     /**
      * Общее число муравьев
      */
     private final Long antNumber;
+
+    /**
+     * Количество муравьев, идущих случайным образом
+     */
+    private final Long randomAntNumber;
+
     /**
      * Список вершин
      */
     private final List<Node> nodeList;
 
-    private final Long randomAntNumber;
-
+    /**
+     * Список поставщиков
+     */
     private final List<Supplier> suppliers;
 
-    private final List<List<Order>> allOrdersLists = new ArrayList<>();
-
+    /**
+     * Список оптимальных закупок
+     */
     private List<Order> minOrderList;
 
+    /**
+     * Общая стоимость самой оптимальной закупки
+     */
     Double minFullWeight = Double.MAX_VALUE;
 
-    private long minOrderSize;
+    /**
+     * Максимальное количество возможных закупок
+     */
+    private final long maxOrders;
 
+    /**
+     * Самая минимальная стоимость заказа на каждой итерации
+     */
+    private final List<Double> minimalWeightList;
+
+    /**
+     * Скорость распространения феромона
+     */
     final Double speedPher;
-    final Double speedPherDecay;
 
-    private List<Double> minimalWeightList;
+    /**
+     * Скорость испарния феромона
+     */
+    final Double speedPherDecay;
 
     public Algorithm(Double fullOrder, Long antNumber, Long randomAntNumber, List<Supplier> suppliers, Double speedPher, Double speedPherDecay) {
         this.fullOrder = fullOrder;
@@ -48,20 +73,19 @@ public class Algorithm {
 
         this.nodeList = new ArrayList<>();
 
-        minOrderSize = (long) Math.ceil(fullOrder / suppliers.stream().min(Comparator.comparingInt(Supplier::getCapacityPallets)).get().getCapacityPallets());
+        this.maxOrders = (long) Math.ceil(fullOrder / suppliers.stream().min(Comparator.comparingInt(Supplier::getCapacityPallets)).get().getCapacityPallets());
 
-        System.out.println("max order size:" + minOrderSize);
-        minimalWeightList = new ArrayList<>();
+        this.minimalWeightList = new ArrayList<>();
         suppliers.forEach(supplier -> {
-            for (long i = 0; i < minOrderSize; i++) {
+            for (long i = 0; i < this.maxOrders; i++) {
                 this.nodeList.add(new Node(supplier, i, .0));
-                minimalWeightList.add(.0);
+                this.minimalWeightList.add(Double.MAX_VALUE);
             }
         });
 
     }
 
-    public Double alg() {
+    public Double calculate() {
         long ant = 0;
         while (ant < this.antNumber) {
 
@@ -78,7 +102,7 @@ public class Algorithm {
                 Node currentNode;
                 List<Node> availableNodes = new ArrayList<>();
                 for (Node node : nodeList) {
-                    if (node.getNumber() == currentOrderNumber) {
+                    if (node.getNumber() == currentOrderNumber && !node.getSupplier().isEmpty()) {
                         availableNodes.add(node);
                     }
                 }
@@ -95,15 +119,22 @@ public class Algorithm {
                 orders.add(new Order(currentNode, weight));
                 currentOrder += supplier.getCapacityPallets();
                 fullWeight += weight;
+
                 if (this.minimalWeightList.get((int) currentOrderNumber) > fullWeight) {
+
                     this.minimalWeightList.remove(this.minimalWeightList.get((int) currentOrderNumber));
                     this.minimalWeightList.add((int) currentOrderNumber, fullWeight);
 
                     for (Order order: orders) {
                         order.getNode().addPheromone(this.speedPher);
                     }
+                    List<Node> nodesInOrder = orders.stream().map(order -> order.getNode()).collect(Collectors.toList());
+                    for (Node node: this.nodeList) {
+                        if (!nodesInOrder.contains(node)) {
+                            node.addPheromone(this.speedPherDecay);
+                        }
+                    }
                 }
-                //updatePheromones(currentOrderNumber);
                 currentOrderNumber++;
             }
 
@@ -111,8 +142,6 @@ public class Algorithm {
                 this.minFullWeight = fullWeight;
                 this.minOrderList = orders;
             }
-
-            this.allOrdersLists.add(orders);
 
             for (Supplier s: suppliers) {
                 s.restore();
@@ -124,51 +153,30 @@ public class Algorithm {
         return this.minFullWeight;
     }
 
-    private void updatePheromones(long orderNumber) {
-        if (this.allOrdersLists.isEmpty()) {
-            return;
-        }
-
-        List<Order> cheapestOrderList = this.allOrdersLists.get(0);
-        Double cheapestWeight = getOrderListWeight(orderNumber, cheapestOrderList);
-
-        for (List<Order> orderList : this.allOrdersLists) {
-            Double currentWeight = getOrderListWeight(orderNumber, orderList);
-            if (currentWeight < cheapestWeight) {
-                cheapestOrderList = orderList;
-                cheapestWeight = currentWeight;
-            }
-        }
-
-        for (Order order: cheapestOrderList) {
-            if (order.getNode().getNumber() <= orderNumber) {
-                order.getNode().addPheromone(this.speedPher);
-            }
-        }
-
-        for (List<Order> orderList : this.allOrdersLists) {
-            if (!orderList.equals(cheapestOrderList)) {
-                for (Order order: orderList) {
-                    if (order.getNode().getNumber() <= orderNumber) {
-                        order.getNode().addPheromone(this.speedPherDecay);
-                    }
-                }
-            }
-        }
-    }
-
-    private Double getOrderListWeight(long orderNumber, List<Order> orderList) {
-        Double currentWeight = .0;
-        for (Order order: orderList) {
-            if (order.getNode().getNumber() <= orderNumber) {
-                currentWeight += order.getWeight();
-            }
-        }
-        return currentWeight;
-    }
-
     public List<Order> getMinOrderList() {
         return this.minOrderList;
+    }
+
+    public String getCheapestOrderInfo() {
+        StringBuilder stringBuilder = new StringBuilder(String.format("Сумма заказа: %s\n", this.minFullWeight.toString()));
+
+        stringBuilder.append("Заказ: \n");
+
+        Map<Supplier, Integer> supplierDoubleMap = new HashMap<>();
+
+        for (Order order: this.minOrderList) {
+            Supplier currentSupplier = order.getNode().getSupplier();
+            if (supplierDoubleMap.containsKey(currentSupplier)) {
+                supplierDoubleMap.replace(currentSupplier, supplierDoubleMap.get(currentSupplier) + currentSupplier.getCapacityPallets());
+            } else {
+                supplierDoubleMap.put(currentSupplier, currentSupplier.getCapacityPallets());
+            }
+        }
+
+        for (Supplier supplier: supplierDoubleMap.keySet()) {
+            stringBuilder.append(String.format("%s, %s: %d\n", supplier.getName(), supplier.getProduct(), supplierDoubleMap.get(supplier)));
+        }
+        return stringBuilder.toString();
     }
 
     public Double getFullOrder() {

@@ -6,14 +6,17 @@ import java.util.Objects;
  * Вершина
  */
 public class Node {
+
     /**
      * Поставщик
      */
-    private Supplier supplier;
+    private final Supplier supplier;
+
     /**
      * Порядковый номер итерации
      */
-    private Long number;
+    private final Long number;
+
     /**
      * Феромон.
      */
@@ -33,24 +36,26 @@ public class Node {
         return supplier;
     }
 
-    public void setSupplier(Supplier supplier) {
-        this.supplier = supplier;
-    }
-
     public Long getNumber() {
         return number;
-    }
-
-    public void setNumber(Long number) {
-        this.number = number;
     }
 
     public Double getPheromone() {
         return pheromone;
     }
 
-    public void setPheromone(Double pheromone) {
-        this.pheromone = pheromone;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Node node = (Node) o;
+        return supplier.equals(node.supplier) &&
+                number.equals(node.number);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(supplier, number);
     }
 
     @Override
