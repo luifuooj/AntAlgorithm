@@ -13,13 +13,13 @@ public class Node {
     /**
      * Порядковый номер итерации
      */
-    private Integer number;
+    private Long number;
     /**
      * Феромон.
      */
     private Double pheromone;
 
-    public Node(Supplier supplier, Integer number, Double pheromone) {
+    public Node(Supplier supplier, Long number, Double pheromone) {
         this.supplier = supplier;
         this.number = number;
         this.pheromone = pheromone;
@@ -37,11 +37,11 @@ public class Node {
         this.supplier = supplier;
     }
 
-    public Integer getNumber() {
+    public Long getNumber() {
         return number;
     }
 
-    public void setNumber(Integer number) {
+    public void setNumber(Long number) {
         this.number = number;
     }
 
@@ -51,19 +51,6 @@ public class Node {
 
     public void setPheromone(Double pheromone) {
         this.pheromone = pheromone;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Node node = (Node) o;
-        return supplier.equals(node.supplier);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(supplier);
     }
 
     @Override

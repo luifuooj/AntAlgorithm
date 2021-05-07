@@ -13,20 +13,20 @@ class AlgorithmTest {
 
     @BeforeEach
     void setUp() {
-        addSupplier("sup1", "prod3", 100., 50., 20, 5, 6000.);
-        addSupplier("sup2", "prod3", 50., 40., 20, 5, 4000.);
-        addSupplier("sup3", "prod3", 60., 45., 50, 7, 3500.);
-        addSupplier("sup4", "prod3", 40., 55., 30, 10, 10000.);
-        addSupplier("sup5", "prod3", 200., 45., 20, 6, 4500.);
-        addSupplier("sup6", "prod3", 300., 45., 40, 5, 8000.);
-        addSupplier("sup7", "prod3", 70., 45., 60, 6, 6000.);
-        addSupplier("sup8", "prod3", 235., 45., 15, 4, 6500.);
-        addSupplier("sup9", "prod3", 140., 45., 30, 3, 4000.);
-        addSupplier("sup10", "prod3", 160., 45., 35, 4, 4600.);
-        addSupplier("sup11", "prod3", 120., 45., 25, 5, 6700.);
-        addSupplier("sup12", "prod3", 225., 45., 10, 7, 5100.);
-        addSupplier("sup13", "prod3", 110., 45., 20, 6, 5200.);
-        addSupplier("sup14", "prod3", 85., 45., 25, 8, 5300.);
+        addSupplier("sup1", "prod1", 100., 50., 20, 5, 6000.);
+        addSupplier("sup2", "prod1", 50., 40., 20, 5, 4000.);
+        addSupplier("sup3", "prod1", 80., 45., 25, 4, 5000.);
+        addSupplier("sup4", "prod1", 1000., 55., 30, 10, 2500.);
+        addSupplier("sup5", "prod1", 200., 45., 20, 6, 4500.);
+        addSupplier("sup6", "prod1", 300., 45., 40, 5, 8000.);
+        addSupplier("sup7", "prod1", 70., 45., 60, 6, 6000.);
+        addSupplier("sup8", "prod1", 235., 45., 15, 4, 6500.);
+        addSupplier("sup9", "prod1", 140., 45., 30, 3, 4000.);
+        addSupplier("sup10", "prod1", 160., 45., 35, 4, 4600.);
+        addSupplier("sup11", "prod1", 120., 45., 25, 5, 6700.);
+        addSupplier("sup12", "prod1", 225., 45., 10, 7, 5100.);
+        addSupplier("sup13", "prod1", 110., 45., 20, 6, 5200.);
+        addSupplier("sup14", "prod1", 85., 45., 25, 8, 5300.);
 
     }
 
@@ -36,7 +36,7 @@ class AlgorithmTest {
 
     @Test
     void alg() {
-        Algorithm algorithm = new Algorithm(1000., 20000, 10000, supplierList, 0.5, -0.2);
+        Algorithm algorithm = new Algorithm(1000., 10000L, 9000L, supplierList, 0.5, -0.2);
         System.out.println(algorithm.alg());
         System.out.println(algorithm.getMinOrderList());
     }

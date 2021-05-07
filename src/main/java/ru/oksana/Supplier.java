@@ -63,10 +63,10 @@ public class Supplier {
      * @return вес
      */
     public Double getWeight() {
-        Double weight = .0;
         if (quantity < capacityPallets) {
             return Double.MAX_VALUE;
         }
+        Double weight = .0;
         if (currentCarCount == 0 || capacityOfCar.equals(currentLoadOfCar)) {
             weight += carPrice;
             currentCarCount++;
