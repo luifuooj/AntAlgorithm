@@ -1,0 +1,8 @@
+Supplier #1;Apple, kg;100;50;20;5;6000
+Supplier #2;Apple, kg;50;40;20;5;4000
+Supplier #3;Apple, kg;80;45;25;4;5000
+Supplier #4;Apple, kg;1000;55;20;5;2500
+Supplier #1;Bananas, kg;100;50;20;5;6000
+Supplier #2;Bananas, kg;50;40;20;5;4000
+Supplier #3;Bananas, kg;80;45;25;4;5000
+Supplier #4;Bananas, kg;1000;55;20;5;2500

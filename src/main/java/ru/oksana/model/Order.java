@@ -1,4 +1,4 @@
-package ru.oksana;
+package ru.oksana.model;
 
 /**
  * Заказ
