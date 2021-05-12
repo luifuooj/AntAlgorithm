@@ -15,14 +15,14 @@ public class Node {
     /**
      * Порядковый номер итерации
      */
-    private final Long number;
+    private final int number;
 
     /**
      * Феромон.
      */
     private Double pheromone;
 
-    public Node(Supplier supplier, Long number, Double pheromone) {
+    public Node(Supplier supplier, int number, Double pheromone) {
         this.supplier = supplier;
         this.number = number;
         this.pheromone = pheromone;
@@ -36,7 +36,7 @@ public class Node {
         return supplier;
     }
 
-    public Long getNumber() {
+    public int getNumber() {
         return number;
     }
 
@@ -50,7 +50,7 @@ public class Node {
         if (o == null || getClass() != o.getClass()) return false;
         Node node = (Node) o;
         return supplier.equals(node.supplier) &&
-                number.equals(node.number);
+                (number == node.number);
     }
 
     @Override

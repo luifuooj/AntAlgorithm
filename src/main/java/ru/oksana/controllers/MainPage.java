@@ -1,5 +1,7 @@
 package ru.oksana.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +15,8 @@ import java.util.List;
 
 @Controller
 public class MainPage {
+
+    static final Logger logger = LoggerFactory.getLogger(MainPage.class);
 
     private final SupplierService supplierService;
 
@@ -50,10 +54,15 @@ public class MainPage {
     @PostMapping("/query")
     public String query(@RequestParam Double fullOrder, @RequestParam String product, Model model) {
         List<Supplier> supplierList = supplierService.findSuppliersByProduct(product);
-        System.out.println(supplierList);
         Algorithm algorithm = new Algorithm(fullOrder, supplierList);
-        model.addAttribute("result", algorithm.calculate());
-        model.addAttribute("orderList", algorithm.getCheapestOrderInfo());
+        logger.info("Calculating...");
+        double ans = algorithm.calculate();
+        model.addAttribute("result", ans);
+        logger.info("Calculated: " + ans);
+        logger.info("Getting info...");
+        List<String> info = algorithm.getCheapestOrderInfo();
+        logger.info("Order info: " + info.toString());
+        model.addAttribute("orderList", info);
         return index(model);
     }
 

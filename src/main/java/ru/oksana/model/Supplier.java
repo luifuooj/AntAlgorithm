@@ -137,10 +137,10 @@ public class Supplier {
 
     /**
      * Проверка на наличие товара у поставщика.
-     * @return true - если пустой
+     * @return false - если пустой
      */
-    public Boolean isEmpty() {
-        return getQuantity() < getCapacityPallets();
+    public Boolean isNotEmpty() {
+        return !(getQuantity() < getCapacityPallets());
     }
 
     public String getName() {

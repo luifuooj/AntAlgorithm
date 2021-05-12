@@ -16,7 +16,7 @@ class AlgorithmTest {
     @BeforeEach
     void setUp() {
         addSupplier("Supplier #1", "Огурцы, кг", 100., 50., 20, 5, 6000.);
-        addSupplier("Supplier #2", "Огурцы, кг", 50., 40., 20, 5, 4000.);
+        addSupplier("Supplier #2", "Огурцы, кг", 50., 40., 20, 5, 40000.);
         addSupplier("Supplier #3", "Огурцы, кг", 80., 45., 25, 4, 5000.);
         addSupplier("Supplier #4", "Огурцы, кг", 1000., 55., 20, 5, 2500.);
         /*addSupplier("Supplier #5", "Огурцы, кг", 200., 45., 20, 6, 4500.);
@@ -37,8 +37,9 @@ class AlgorithmTest {
 
     @Test
     void alg() {
-        Algorithm algorithm = new Algorithm(1000., 10000L, 5000L, supplierList, 0.5, -0.2);
+        Algorithm algorithm = new Algorithm(1150., supplierList);
         algorithm.calculate();
+        System.out.println(algorithm.getMinOrderList());
         System.out.println(algorithm.getCheapestOrderInfo());
     }
 }
